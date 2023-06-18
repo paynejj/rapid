@@ -1,7 +1,8 @@
 use super::RapidCommand;
 use crate::{
-	cli::{current_directory, logo, rapid_logo, Config},
+	commands::Config,
 	rapid_config::config::{find_rapid_config, is_rapid, AppType, RapidConfig},
+	utils::{current_directory, logo, rapid_logo},
 };
 use clap::{arg, value_parser, ArgAction, ArgMatches, Command};
 use spinach::Spinach;
@@ -51,18 +52,18 @@ pub fn get_server_port(config: &RapidConfig, fallback_port: u16) -> u16 {
 		"server" => match &config.server {
 			Some(val) => match val.port {
 				Some(p) => p,
-				None => fallback_port
+				None => fallback_port,
 			},
-			_ => fallback_port
-		}
+			_ => fallback_port,
+		},
 		"remix" => match &config.remix {
 			Some(val) => match val.server_port {
 				Some(s_port) => s_port,
-				None => fallback_port
+				None => fallback_port,
 			},
-			_ => fallback_port
-		}
-		_ => fallback_port
+			_ => fallback_port,
+		},
+		_ => fallback_port,
 	}
 }
 
@@ -89,7 +90,7 @@ fn parse_run_args(args: &ArgMatches) -> Result<(), ()> {
 						"server" => {
 							handle_run_server(server_port, rapid_config.app_type);
 							return Ok(());
-						},
+						}
 						"remix" => {
 							handle_run_server(server_port, rapid_config.app_type);
 							return Ok(());
@@ -106,7 +107,7 @@ fn parse_run_args(args: &ArgMatches) -> Result<(), ()> {
 					}
 				}
 			}
-			None => break
+			None => break,
 		}
 	}
 
@@ -139,8 +140,6 @@ fn handle_run_server(server_port: u16, app_type: String) {
 		.arg("cargo install --list")
 		.output()
 		.expect("Could not complete pre-run checks.");
-
-
 
 	// This is the hot reload command that powers how rapid is able to hot-reload its binary
 	// It uses a combination of cargo watch and systemfd to achieve this

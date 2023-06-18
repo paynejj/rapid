@@ -1,16 +1,10 @@
 use crate::{
 	args::flag,
 	commands::{self, RapidCommand},
-	constants::LOGO,
 };
-use clap::{command, ArgMatches, Command, crate_version};
+use clap::{command, crate_version, ArgMatches, Command};
 use colorful::Colorful;
-use std::{
-	env::{current_dir, current_exe},
-	path::PathBuf,
-	process::exit,
-};
-use tiny_gradient::{GradientDisplay, GradientStr, RGB};
+use std::process::exit;
 
 pub type App = Command;
 
@@ -18,40 +12,6 @@ pub type App = Command;
 // TODO: eventually, we should use this to tell the user that they need to update their CLI version
 // (we could detect this by comparing this value with the crate_version!() macro value)
 pub const RAPID_LATEST_VERSION: &str = "v0.4.3";
-
-/// Logo with signs
-pub fn rapid_logo<'a>() -> GradientDisplay<'a, [RGB; 4]> {
-	GradientStr::gradient(
-		&">>> R A P I D",
-		[RGB::new(9, 42, 208), RGB::new(26, 78, 96), RGB::new(9, 42, 208), RGB::new(14, 197, 255)],
-	)
-}
-
-/// Normal Logo
-pub fn rapid_logo_small<'a>() -> GradientDisplay<'a, [RGB; 4]> {
-	GradientStr::gradient(
-		&"R A P I D",
-		[RGB::new(9, 42, 208), RGB::new(26, 78, 96), RGB::new(9, 42, 208), RGB::new(14, 197, 255)],
-	)
-}
-
-/// Large Ascii printed logo
-pub fn logo<'a>() -> GradientDisplay<'a, [RGB; 4]> {
-	GradientStr::gradient(
-		&LOGO,
-		[RGB::new(9, 42, 208), RGB::new(26, 78, 96), RGB::new(9, 42, 208), RGB::new(14, 197, 255)],
-	)
-}
-
-/// Returns what the current working directory of the user is
-pub fn current_directory() -> PathBuf {
-	current_dir().expect("Error: Could not determine the current wrking directory")
-}
-
-/// Returns where the installed binary is on the users machine
-pub fn binary_dir() -> PathBuf {
-	current_exe().expect("Error: Could not determine binary dir.")
-}
 
 /// TODO: config fields can be added here later on as needed
 pub struct Config {}

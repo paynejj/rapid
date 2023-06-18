@@ -1,20 +1,21 @@
 use super::RapidCommand;
 use crate::{
-	cli::{current_directory, logo, rapid_logo, Config},
+	commands::Config,
 	constants::BOLT_EMOJI,
 	tui::{clean_console, indent},
+	utils::{current_directory, logo, rapid_logo},
 };
 use clap::{arg, value_parser, ArgAction, ArgMatches, Command};
 use colorful::{Color, Colorful};
 use include_dir::{include_dir, Dir};
 use requestty::{prompt_one, Question};
+use spinach::Spinach;
 use std::{
 	fs::remove_dir_all,
 	path::PathBuf,
 	process::{exit, Command as StdCommand},
 	thread, time,
 };
-use spinach::Spinach;
 
 // We need to get the project directory to extract the template files (this is because include_dir!() is yoinked inside of a workspace)
 static PROJECT_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/templates/server");
@@ -170,17 +171,15 @@ pub fn init_remix_template(current_working_directory: PathBuf) {
 	// Replace the default source dir with our own template files
 	REMIX_DIR.extract(current_working_directory.join(project_name).clone()).unwrap();
 
-
 	// Rename cargo.toml file (We have to set it to Cargo__toml due to a random bug with cargo publish command in a workspace)
 	StdCommand::new("sh")
-	.current_dir(current_directory().join(project_name))
-	.arg("-c")
-	.arg(format!("mv Cargo__toml Cargo.toml"))
-	.spawn()
-	.unwrap()
-	.wait()
-	.expect("Error: Could not scaffold project. Please try again!");
-
+		.current_dir(current_directory().join(project_name))
+		.arg("-c")
+		.arg(format!("mv Cargo__toml Cargo.toml"))
+		.spawn()
+		.unwrap()
+		.wait()
+		.expect("Error: Could not scaffold project. Please try again!");
 
 	// Sleep a little to show loading animation, etc (there is a nice one we could use from the "tui" crate)
 	let timeout = time::Duration::from_millis(675);
